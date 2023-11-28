@@ -1,0 +1,23 @@
+<!--letakkan didaerah<head>sopianaji.blogspot.com-->
+  <link rel="stylesheet" href="<?php echo base_url(); ?>assets/backend/datatables/css/bootstrap.min.css">
+  <link rel="stylesheet" href="<?php echo base_url(); ?>assets/backend/datatables/css/bootstrap-editable.css">  
+  <link rel="stylesheet" href="<?php echo base_url(); ?>assets/backend/datatables/css/bootstrap-table.css">    
+<!--atau sebelum</head>sopianaji.blogspot.com-->
+
+<!--letakan didaerah<footer>sopianaji.blogspot.com-->
+    <script src="<?php echo base_url(); ?>assets/backend/datatables/js/bootstrap-table.js"></script>
+    <script src="<?php echo base_url(); ?>assets/backend/datatables/js/tableExport.js"></script>
+    <script src="<?php echo base_url(); ?>assets/backend/datatables/js/data-table-active.js"></script>
+    <script src="<?php echo base_url(); ?>assets/backend/datatables/js/bootstrap-table-editable.js"></script>
+    <script src="<?php echo base_url(); ?>assets/backend/datatables/js/bootstrap-editable.js"></script>
+    <script src="<?php echo base_url(); ?>assets/backend/datatables/js/bootstrap-table-resizable.js"></script>
+    <script src="<?php echo base_url(); ?>assets/backend/datatables/js/colResizable-1.5.source.js"></script>
+    <script src="<?php echo base_url(); ?>assets/backend/datatables/js/bootstrap-table-export.js"></script>
+<!--atau sebelum</body>sopianaji.blogspot.com-->
+
+<!--html view table-->  
+  <div id="toolbar">      
+  <a href="" title="Ganti tombol sesuai dengan kebutuhan"> <button type="button" class="btn btn-default">Tambah</button> </a>      
+  </div>      
+  <table id="table" data-toggle="table" data-pagination="true" data-search="true"  data-show-export="true"  data-toolbar="#toolbar">  
+<!--end html view table--> 

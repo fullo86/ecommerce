@@ -1,0 +1,24 @@
+<!--letakan didaerah<head>sopianaji.blogspot.com-->
+    <link rel="stylesheet" href="datatables/css/bootstrap.min.css">
+    <link rel="stylesheet" href="datatables/css/bootstrap-editable.css"> 
+    <link rel="stylesheet" href="datatables/css/bootstrap-table.css">    
+<!--atau sebelum</head>sopianaji.blogspot.com-->
+
+<!--letakan didaerah<footer>sopianaji.blogspot.com-->
+    <script src="datatables/js/bootstrap-table.js"></script>
+    <script src="datatables/js/tableExport.js"></script>
+    <script src="datatables/js/data-table-active.js"></script>
+    <script src="datatables/js/bootstrap-table-editable.js"></script>
+    <script src="datatables/js/bootstrap-editable.js"></script>
+    <script src="datatables/js/bootstrap-table-resizable.js"></script>
+    <script src="datatables/js/colResizable-1.5.source.js"></script>
+    <script src="datatables/js/bootstrap-table-export.js"></script>
+<!--atau sebelum</body>sopianaji.blogspot.com-->
+
+<!--class table pada view-->
+  <div id="toolbar">
+  <a href="" title="Ganti tombol sesuai dengan kebutuhan"> <button type="button" class="btn btn-default">Ganti</button> </a>
+  </div>
+  <table id="table" data-toggle="table" data-pagination="true" data-search="true"  data-show-export="true"  data-toolbar="#toolbar">
+<!--end class table pada view-->
+

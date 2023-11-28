@@ -1,0 +1,19 @@
+.actions-column {
+    width: 250px;
+}
+
+.staff-actions-column {
+    width: 350px;
+}
+
+.remove-row button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    margin-left: 5px;
+    color: #333;
+}
+
+.login {
+    background: url("/images-static/bg-doodle.png");
+}
