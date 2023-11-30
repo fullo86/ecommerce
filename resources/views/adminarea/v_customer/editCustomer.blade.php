@@ -6,7 +6,6 @@
     <header class="page-header">
         <h2>Edit Customer</h2>
     </header>
-<p>{{$customerValue}}</p>
     <div class="panel-body">
         <h4 class="mb-2">Edit Customer</h4>
         <form class="form-horizontal form-bordered" action="/admin-area/edit/customer/update/{{ $customerValue->id }}" method="post" enctype="multipart/form-data">
@@ -28,7 +27,7 @@
                 <div class="form-group">
                     <label class="col-md-2 control-label" for="phone">No Handphone</label>
                     <div class="col-md-10">
-                        <input type="text" class="form-control" name="phone" placeholder="Masukan No Handphone" id="phone" value="{{ $customerValue->phone }}" required>
+                        <input type="text" class="form-control" name="phone" placeholder="Masukan No Handphone" id="phone" value="{{ $customerValue->phone }}" oninput="this.value = this.value.replace(/[^0-9]/g, '');" required>
                     </div>
                 </div>
                 <div class="form-group">

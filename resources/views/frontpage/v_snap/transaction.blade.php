@@ -107,7 +107,8 @@
       embedId: 'snap-container',
       onSuccess: function (result) {
         /* You may add your own implementation here */
-        alert("Pembayaran Berhasil!"); console.log(result);
+        clearCart();
+        window.location.href = '/customer/transaction/history'; // Ganti dengan rute yang sesuai
       },
       onPending: function (result) {
         /* You may add your own implementation here */
@@ -123,5 +124,21 @@
       }
     });
   });
+
+  function clearCart() {
+        // AJAX request untuk menghapus data keranjang
+        fetch('/customer/cart/clear', {
+            method: 'POST',
+            headers: {
+                'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                'Content-Type': 'application/json',
+                'Accept': 'application/json',
+            },
+            body: JSON.stringify({}),
+        })
+        .then(response => response.json())
+        .then(data => console.log(data))
+        .catch(error => console.error('Error:', error));
+    }  
 </script>
 @endsection

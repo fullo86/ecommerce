@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\administrator;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\CategoryRequest;
 use App\Models\Category;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
@@ -21,7 +22,7 @@ class CategoryController extends Controller
         return view('adminarea/v_category/addCategory');
     }
 
-    public function store(Request $request)
+    public function store(CategoryRequest $request)
     {
         $id = Str::uuid();
         $data = $request->all();
@@ -44,7 +45,7 @@ class CategoryController extends Controller
         return view('adminarea/v_category/editCategory', ['category' => $categoryValue]);
     }
 
-    public function update(Request $request, $id)
+    public function update(CategoryRequest $request, $id)
     {
         $updateCategory = Category::findOrFail($id);
 

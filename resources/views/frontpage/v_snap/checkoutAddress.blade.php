@@ -22,7 +22,6 @@
               @endphp
               @foreach (Cart::content() as $item)
               <input type="hidden" name="products[]" value="{{ $item->id }}">
-              {{-- <input type="hidden" name="products[]" value="{{ $item->qty }}"> --}}
               @php
                   $total += $item->subtotal;
                   $grandTotal = $total + $dataShipping[0]['cost'][0]['value'];
@@ -185,25 +184,11 @@
 
         checkbox.addEventListener('change', function () {
             if (checkbox.checked) {
-                // Checkbox di-check, sembunyikan elemen dengan kelas ori-ship
                 oriShipDiv.classList.add('hidden');
             } else {
-                // Checkbox tidak di-check, tampilkan kembali elemen dengan kelas ori-ship
                 oriShipDiv.classList.remove('hidden');
             }
         });
     });
 </script>    
-{{-- <script>
-  $(document).ready(function() {
-    $('#checkoutForm').on('submit', function(e) {
-      e.preventDefault(); // Mencegah formulir dikirim secara default
-
-      // Handle pengiriman formulir menggunakan AJAX atau metode lainnya jika diperlukan
-
-      // Setelah formulir berhasil dikirim, lakukan pengalihan
-      window.location.href = '/'; // Ganti dengan rute yang sesuai
-    });
-  });
-</script> --}}
 @endsection

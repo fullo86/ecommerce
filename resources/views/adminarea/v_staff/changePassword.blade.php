@@ -8,7 +8,7 @@
     </header>
     <div class="panel-body">
         @if (Session::has('status'))
-            <div class="alert {{ Session::get('status') == 'success' ? 'alert-success' : 'alert-failed' }}">
+            <div id="flashMessage" class="alert alert-{{ Session::get('status') == 'success' ? 'success' : 'danger' }}">
                 {{ Session::get('message') }}
             </div>
         @endif
@@ -19,9 +19,21 @@
             @method('patch')
             <div class="row col-md-12">
                 <div class="form-group">
-                    <label class="col-md-2 control-label" for="username">Password</label>
+                    <label class="col-md-2 control-label" for="oldPassword">Password Lama</label>
                     <div class="col-md-10">
-                        <input type="password" class="form-control" name="password" placeholder="Masukan Password Baru" id="password" required>
+                        <input type="password" class="form-control" name="old_password" placeholder="Masukan Password Lama" id="oldPassword" required>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-md-2 control-label" for="newPassword">Password Baru</label>
+                    <div class="col-md-10">
+                        <input type="password" class="form-control" name="new_password" placeholder="Masukan Password Baru" id="newPassword" required>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-md-2 control-label" for="repeatPassword">Konfirmasi Password</label>
+                    <div class="col-md-10">
+                        <input type="password" class="form-control" name="repeat_password" placeholder="Konfirmasi Password" id="repeatPassword" required>
                     </div>
                 </div>
                 

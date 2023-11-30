@@ -1,7 +1,6 @@
 @extends('frontpage/layouts/main')
 @section('title', 'Daftar')
 @section('registerFrontPage')
-<!-- Checkout Start -->
 <div class="container-fluid">
     <div class="row px-xl-5 justify-content-center">
       <div class="col-lg-6">
@@ -31,7 +30,7 @@
                 </div>
                 <div class="col-md-12 form-group">
                     <label>No Handphone</label>
-                    <input class="form-control" type="text" name="phone" placeholder="Masukan No Handphone" required/>
+                    <input class="form-control" type="text" name="phone" placeholder="Masukan No Handphone" oninput="this.value = this.value.replace(/[^0-9]/g, '');" required/>
                 </div>  
                 <div class="col-md-12 form-group">
                     <label>Email</label>
@@ -49,5 +48,4 @@
       </div>
     </div>
   </div>
-<!-- Checkout End -->    
 @endsection

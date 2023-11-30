@@ -9,16 +9,18 @@
 
     <!-- start: page -->
     <div class="panel-body">
-        {{-- <div class="row">
-          <div class="col-sm-6">
-            <div id="toolbar">
-              <a href="/admin-area/create/staff" title="Tambah Staff"> <button type="button" class="btn btn-primary"><i class="fa fa-plus"></i>Tambah</button> </a>
-            </div>
+      <div class="row">
+        <div class="col-sm-6">
+          <div id="toolbar">
+            @if (Auth::user()->role_id == 1)
+              <a href="/admin-area/delete/transaction/show" title="Daftar Transaksi Yang Terhapus"> <button type="button" class="btn btn-dark"><i class="fa fa-archive"></i> Data Terhapus</button> </a>
+            @endif
           </div>
-        </div> --}}
-        @if (Session::has('status'))
-          <div class="alert {{ Session::get('status') == 'success' ? 'alert-success' : 'alert-failed' }}">
-              {{ Session::get('message') }}
+        </div>
+      </div>
+      @if (Session::has('status'))
+        <div id="flashMessage" class="alert alert-{{ Session::get('status') == 'success' ? 'success' : 'danger' }}">
+          {{ Session::get('message') }}
           </div>
         @endif
         <table
@@ -31,7 +33,7 @@
                 <th>No Handphone</th>
                 <th>Email</th>
                 <th>Alamat</th>
-                <th>Aksi</th>
+                <th class="actions-column">Aksi</th>
           </tr>
           </thead>
           <tbody>
@@ -65,6 +67,13 @@
                       <a href="/admin-area/transaction/invoice/{{ $trx->order_id }}" class="mb-xs mt-xs mr-xs btn btn-xs btn-primary edit-row">
                           <i class="fa fa-print"></i> Invoice
                       </a>
+                      <form action="/admin-area/delete/transaction/{{ $trx->id }}" method="post" class="d-inline mb-xs mt-xs mr-xs btn btn-xs btn-danger remove-row">
+                        @method('delete')
+                        @csrf
+                        <button onclick="return confirm('Yakin Mau Hapus Transaksi {{ $trx->order_id }} ?')" style="color: white;" type="submit">
+                            <i class="fa fa-trash-o"></i> Hapus
+                        </button>
+                      </form>  
                     </td>
                   </tr>                        
             @endforeach

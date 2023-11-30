@@ -6,7 +6,15 @@
     <header class="page-header">
         <h2>Tambah Staff</h2>
     </header>
-
+    @if ($errors->any())
+        <div class="alert alert-danger">
+            <ul>
+                @foreach ($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+        </div>
+    @endif
     <div class="panel-body">
         <h4 class="mb-2">Tambah Staff</h4>
         <form class="form-horizontal form-bordered" action="/admin-area/create/staff/save" method="post" enctype="multipart/form-data">
@@ -33,7 +41,7 @@
                 <div class="form-group">
                     <label class="col-md-2 control-label" for="phone">No Handphone</label>
                     <div class="col-md-10">
-                        <input type="text" class="form-control" name="phone" placeholder="Masukan No Handphone" id="phone" required>
+                        <input type="text" class="form-control" name="phone" placeholder="Masukan No Handphone" id="phone" oninput="this.value = this.value.replace(/[^0-9]/g, '');" required>
                     </div>
                 </div>
                 <div class="form-group">

@@ -35,7 +35,7 @@
                             <td>{{ $row->order_id }}</td>
                             <td>Rp. {{ number_format($row->total_price, 0, ',', '.') }}</td>
                             <td>{{ \Carbon\Carbon::parse($row->detailTrx->transaction_time)->format('d-m-Y') }}</td>
-                            <td>{{ $row->detailTrx->transaction_status }}</td>
+                            <td>{{ $row->detailTrx->transaction_status == 'settlement' ? 'Berhasil' : $row->detailTrx->transaction_status }}</td>
                             <td class="align-items-center">
                               <a href="#" data-toggle="collapse" data-target="#shipping-address">Detail</a>
                             </td>
@@ -51,7 +51,7 @@
           <h5 class="section-title position-relative text-uppercase mb-3">
             <span class="bg-secondary pr-3">Produk</span>
           </h5>
-          <div class="bg-light p-30 mb-5 collapse mb-5" id="shipping-address">
+          <div class="bg-light p-30 mb-5 collapse" id="shipping-address">
             <div class="border-bottom">
               @foreach ($history as $row)
                   @foreach ($row->products as $item)

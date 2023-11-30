@@ -16,11 +16,6 @@
             </div>
           </div>
         </div>
-        @if (Session::has('status'))
-          <div class="alert {{ Session::get('status') == 'success' ? 'alert-success' : 'alert-failed' }}">
-              {{ Session::get('message') }}
-          </div>
-        @endif
         <table class="table table-bordered table-striped mb-none" id="table" data-toggle="table" data-pagination="true" data-search="true"  data-show-export="true"  data-toolbar="#toolbar">
           <thead>
             <tr>

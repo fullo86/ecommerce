@@ -4,9 +4,9 @@
 @section('dashboardAdminArea')
 <section class="content-body">
     @if (Session::has('status'))
-    <div class="alert alert-{{ Session::get('status') == 'success' ? 'success' : 'danger' }}">
-        {{ Session::get('message') }}
-    </div>
+        <div id="flashMessage" class="alert alert-{{ Session::get('status') == 'success' ? 'success' : 'danger' }}">
+            {{ Session::get('message') }}
+        </div>
     @endif
     <div class="row">
         <div class="col-md-12 col-lg-12 col-xl-4">
@@ -72,11 +72,11 @@
                                     <div class="summary">
                                         <h4 class="title">Transaksi</h4>
                                         <div class="info">
-                                            <strong class="amount">1281</strong>
+                                            <strong class="amount">{{ $totalTrx }}</strong>
                                         </div>
                                     </div>
                                     <div class="summary-footer">
-                                        <a class="text-uppercase">(view all)</a>
+                                        <a href="/admin-area/transaction" class="text-uppercase">(view all)</a>
                                     </div>
                                 </div>
                             </div>
@@ -153,6 +153,5 @@
             </div>
         </section>
     </div>
-
 </section>
 @endsection

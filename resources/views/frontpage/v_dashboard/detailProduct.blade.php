@@ -1,7 +1,6 @@
 @extends('frontpage/layouts/main')
 @section('title', 'Detail Produk')
 @section('detailProductPage')
-    <!-- Shop Detail Start -->
     <div class="container-fluid pb-5">
         <div class="row px-xl-5">
             <div class="col-lg-5 mb-30">
@@ -43,26 +42,11 @@
                             @endforeach
                     </div>
                     @endif
-                    {{-- <div class="d-flex mb-4">
-                    </div> --}}
                     <div class="d-flex align-items-center mb-4 pt-2">
-                        {{-- <div class="input-group quantity mr-3" style="width: 130px;">
-                            <div class="input-group-btn">
-                                <button class="btn btn-primary btn-minus">
-                                    <i class="fa fa-minus"></i>
-                                </button>
-                            </div>
-                            <input type="text" class="form-control bg-secondary border-0  text-center" name="qty" value="1">
-                            <div class="input-group-btn">
-                                <button class="btn btn-primary btn-plus">
-                                    <i class="fa fa-plus"></i>
-                                </button>
-                            </div>
-                        </div> --}}
                         @if (!auth()->guard('customer')->user())
                             <button type="button" class="btn btn-primary px-3" onclick="window.location.href='/customer/login'"><i class="fa fa-shopping-cart mr-1"></i> Tambah ke Keranjang</button>
                         @else
-                        <form action="/customer/cart/{{ $detailProduct->id }}" method="post">
+                        <form action="/customer/cart/{{ $detailProduct->id }}" method="post" id="addToCartForm">
                             @csrf
                             <div class="d-flex mb-5">
                                 <strong class="text-dark mr-3">Ukuran:</strong>
@@ -72,8 +56,10 @@
                                             <label class="custom-control-label" for="size-{{ $size->id }}">{{ $size->size_name }}</label>
                                         </div>
                                     @endforeach
-                            </div>        
-                            <button type="submit" class="btn btn-primary px-3"><i class="fa fa-shopping-cart mr-1"></i> Tambah ke Keranjang</button>
+                                </div>
+                            <button type="button" class="btn btn-primary px-3" onclick="addToCart()">
+                                <i class="fa fa-shopping-cart mr-1"></i> Tambah ke Keranjang
+                            </button>
                         </form>
                         @endif        
                     </div>
@@ -113,4 +99,15 @@
             </div>
         </div>
     </div>
+<script>
+    function addToCart() {
+        let selectedSize = document.querySelector('input[name="selectedSize"]:checked');
+
+        if (!selectedSize) {
+            alert('Silakan pilih ukuran sebelum menambahkan ke keranjang.');
+        } else {
+            document.getElementById('addToCartForm').submit();
+        }
+    }
+</script>    
 @endsection

@@ -2,14 +2,17 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\ResetPassword;
 use App\Mail\VerifEmailCustomer;
 use App\Models\Category;
 use App\Models\Customer;
+use Illuminate\Auth\Events\PasswordReset;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Facades\Session;
 
 class AuthController extends Controller
@@ -55,11 +58,15 @@ class AuthController extends Controller
             //cek login if admin
             $request->session()->regenerate();
             if (Auth::user()->role_id  == 1) {
+                Session::flash('status', 'success');
+                Session::flash('message', 'Selamat Datang Di-Dashboard '.Auth::user()->name);
                 return redirect('/administrator/dashboard');
             }
 
             //cek login if staff
             if (Auth::user()->role_id == 2) {
+                Session::flash('status', 'success');
+                Session::flash('message', 'Selamat Datang Di-Dashboard '.Auth::user()->name);
                 return redirect('/administrator/dashboard');
             }
         }
@@ -99,6 +106,10 @@ class AuthController extends Controller
 
     public function registUser(Request $request)
     {
+        $request->validate([
+            'password' => 'required|min:8',
+        ]);
+
         // customer make uuid
         $id = Str::uuid();
         $request['id'] = $id->toString();
@@ -133,6 +144,68 @@ class AuthController extends Controller
         Session::flash('status', 'failed');
         Session::flash('message', 'Verifikasi Gagal');    
         return redirect('/customer/login');
+    }
+
+    public function forgotPassword()
+    {
+        $categories = Category::select('id', 'category_name')->get();
+        return view('frontpage/auth/forgotPassword', ['listCategories' => $categories]);
+    }
+
+    public function processForgotPassword(Request $request)
+    {
+        $request->validate(['email' => 'required|email']);
+        $status = Password::sendResetLink($request->only('email'));
+        // Mail::to($request->email)->send(new ResetPassword($status));
+
+        if ($status === Password::RESET_LINK_SENT) {
+            Session::flash('status', 'success');
+            Session::flash('message', 'Link Reset Password Berhasil Terkirim, Silahkan cek Email');    
+            return redirect('/customer/forgot-password');
+        }else{
+            Session::flash('status', 'failed');
+            Session::flash('message', 'Email Tidak Terdaftar');    
+            return redirect('/customer/forgot-password');
+        }
+    }
+
+    public function resetPassword($token)
+    {
+        $categories = Category::select('id', 'category_name')->get();
+        return view('frontpage/auth/resetPassword', ['listCategories' => $categories, 'token' => $token]);
+    }
+
+    public function processResetPassword(Request $request)
+    {
+        $request->validate([
+            'token' => 'required',
+            'email' => 'required|email',
+            'password' => 'required|min:8|confirmed',
+        ]);
+        
+        $status = Password::reset(
+            $request->only('email', 'password', 'password_confirmation', 'token'),
+            function ($user, $password) {
+                $user->forceFill([
+                    'password' => Hash::make($password)
+                ])->setRememberToken(Str::random(60));
+     
+                $user->save();
+     
+                event(new PasswordReset($user));
+            }
+        );
+
+        if ($status === Password::PASSWORD_RESET) {
+            Session::flash('status', 'success');
+            Session::flash('message', 'Password Berhasil Di-Reset, Silahkan Login');    
+            return redirect('/customer/login');
+        }else{
+            return back()->withErrors(['email' => [__($status)]]);
+        }
+        // return $status === Password::PASSWORD_RESET
+        //         ? redirect()->route('login')->with('status', __($status))
+        //         : back()->withErrors(['email' => [__($status)]]);
     }
 
     public function logout(Request $request)

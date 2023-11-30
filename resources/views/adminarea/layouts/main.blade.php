@@ -211,6 +211,7 @@
 					@yield('transactionAdminArea')
 					@yield('transactionDetailAdminArea')
 					@yield('invoiceAdminArea')
+					@yield('showDeletedTransactionAdminArea')
 				<!-- End Content -->
 			</div>
 
@@ -248,6 +249,8 @@
 		<!-- Theme Initialization Files -->
 		<script src="/adminUi/assets/javascripts/theme.init.js"></script>
 
+		<!-- Flash Message -->
+		<script type="text/javascript">window.setTimeout("document.getElementById('flashMessage').style.display='none';", 5000); </script>
 
 		{{-- <!-- Examples -->
 		<script src="/adminUi/assets/javascripts/tables/examples.datatables.editable.js"></script> --}}

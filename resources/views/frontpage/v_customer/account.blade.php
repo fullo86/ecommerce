@@ -1,5 +1,6 @@
 @extends('frontpage/layouts/main')
 @section('title', 'Akun Saya')
+
 @section('customerAccount')
 <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 <div class="container-fluid">
@@ -59,7 +60,7 @@
                   <select class="custom-select" name="province_id" id="provinceSelect">
                     <option value="{{auth()->guard('customer')->user()->province_id}}" selected>Pilih Provinsi</option>
                     @foreach ($dataApi1 as $row)
-                      <option value="{{ $row['province_id'] }}">{{ $row['province'] }}</option>                        
+                    <option value="{{ $row['province_id'] }}">{{ $row['province'] }}</option>                        
                     @endforeach
                   </select>
                 </div>

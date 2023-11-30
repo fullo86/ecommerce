@@ -17,8 +17,8 @@
           </div>
         </div>
         @if (Session::has('status'))
-          <div class="alert {{ Session::get('status') == 'success' ? 'alert-success' : 'alert-failed' }}">
-              {{ Session::get('message') }}
+          <div id="flashMessage" class="alert alert-{{ Session::get('status') == 'success' ? 'success' : 'danger' }}">
+            {{ Session::get('message') }}
           </div>
         @endif
         <table

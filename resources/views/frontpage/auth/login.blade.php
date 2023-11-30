@@ -1,7 +1,6 @@
 @extends('frontpage/layouts/main')
 @section('title', 'Login Customer')
 @section('loginFrontPage')
-<!-- Checkout Start -->
 <div class="container-fluid">
     <div class="row px-xl-5 justify-content-center">
       <div class="col-lg-5">
@@ -32,11 +31,10 @@
           </form>
          <div class="mt-3 d-flex justify-content-between">
             <span>Belum Punya Akun?&nbsp;&nbsp;</span><a href="/customer/register"> Daftar</a>
-            <a href="/forgot-password" class="ml-auto">Lupa Password</a>
+            <a href="/customer/forgot-password" class="ml-auto">Lupa Password</a>
         </div>
         </div>
       </div>
     </div>
   </div>
-<!-- Checkout End -->    
 @endsection

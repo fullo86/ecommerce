@@ -6,7 +6,9 @@ use App\Models\Category;
 use App\Models\Customer;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Session;
 use Intervention\Image\Facades\Image;
 
 class UserCustomerController extends Controller
@@ -57,5 +59,39 @@ class UserCustomerController extends Controller
         // Session::flash('status', 'success');
         // Session::flash('message', 'Berhasil Mengupdate Data Customer');
         return redirect('/customer/account/'.$updateCustomer->id);
+    }
+
+    public function changePassword($id)
+    {
+        $categories = Category::select('id', 'category_name')->get();
+        $customerPassword = Customer::findOrFail($id);
+
+        return view('frontpage/v_customer/changePassword', ['listCategories' => $categories, 'customerData' => $customerPassword]);
+    }
+
+    public function updatePassword(Request $request, $id)
+    {
+        $data = Customer::findOrFail($id);
+
+        if ($data) {
+            if (!Hash::check($request->old_password, auth()->guard('customer')->user()->password)) {
+                Session::flash('status', 'failed');
+                Session::flash('message', 'Password Lama Salah');
+                return redirect('/customer/account/change-password/'.$data->id);
+            }
+
+            if ($request->new_password != $request->repeat_password) {
+                Session::flash('status', 'failed');
+                Session::flash('message', 'Konfirmasi Password Tidak Sama');
+                return redirect('/customer/account/change-password/'.$data->id);
+            }
+
+            auth()->guard('customer')->user()->update([
+                'password' => Hash::make($request->new_password)
+            ]);
+            Session::flash('status', 'success');
+            Session::flash('message', 'Password Berhasil Diubah');
+            return redirect('/customer/account/change-password/'.$data->id);
+        }
     }
 }

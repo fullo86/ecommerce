@@ -4,6 +4,11 @@
 <h2 class="text-center mb-5">Keranjang Belanja</h2>
 <!-- Cart Start -->
 <div class="container-fluid">
+    @if (Session::has('status'))
+        <div id="flashMessage" class="alert {{ Session::get('status') == 'success' ? 'alert-success' : 'alert-danger' }}">
+            {{ Session::get('message') }}
+        </div>
+    @endif    
     <div class="row px-xl-5">
         <div class="col-lg-8 table-responsive mb-5">
             @if(Cart::count() > 0)
@@ -20,7 +25,6 @@
                 </thead>
                 <tbody class="align-middle">
                     @foreach(Cart::content() as $item)
-                    {{-- {{$item->rowId}} --}}
                         <tr>
                             <td class="align-middle">
                                 {{ $item->name }}
@@ -69,7 +73,6 @@
             <h5 class="section-title position-relative text-uppercase mb-3"><span class="bg-secondary pr-3">Ringkasan Keranjang</span></h5>
             <div class="bg-light p-30 mb-5">
                 <div class="border-bottom pb-2">
-                    {{-- {{Cart::content()-<}} --}}
                     @php
                         $total = 0;
                     @endphp                    

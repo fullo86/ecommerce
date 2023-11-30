@@ -60,11 +60,12 @@ class CustomerController extends Controller
     {
             $removeCustomer = Customer::findOrFail($id);
 
-            if ($removeCustomer->image_profile) {
-                // Unlink Image from storage
-                if ($removeCustomer->image_profile != 'default.png' && file_exists(public_path('storage/images/profile/' . $removeCustomer->image_profile))) {
-                    unlink(public_path('storage/images/profile/' . $removeCustomer->image_profile));
-                }
+            // if ($removeCustomer->image_profile) {
+            //     // Unlink Image from storage
+            //     if ($removeCustomer->image_profile != 'default.png' && file_exists(public_path('storage/images/profile/' . $removeCustomer->image_profile))) {
+            //         unlink(public_path('storage/images/profile/' . $removeCustomer->image_profile));
+            //     }
+            // }
 
             if (!$removeCustomer) {
                 Session::flash('status', 'failed');
@@ -75,7 +76,6 @@ class CustomerController extends Controller
             Session::flash('status', 'success');
             Session::flash('message', 'Berhasil Menghapus Data Customer');
             return redirect('/admin-area/customer');
-        }
     }
 
     public function showDeleted()

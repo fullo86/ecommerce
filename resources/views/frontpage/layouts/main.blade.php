@@ -99,6 +99,7 @@
                                         <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">Akun <i class="fa fa-angle-down mt-1"></i></a>
                                         <div class="dropdown-menu bg-primary rounded-0 border-0 m-0">
                                             <a href="/customer/account/{{auth()->guard('customer')->user()->id}}" class="dropdown-item">Akun Saya</a>
+                                            <a href="/customer/account/change-password/{{auth()->guard('customer')->user()->id}}" class="dropdown-item">Ganti Password</a>
                                             <a href="/customer/transaction/history" class="dropdown-item">Riwayat Transaksi</a>
                                             <a href="/customer/logout" class="dropdown-item">Keluar</a>
                                         </div>
@@ -114,6 +115,7 @@
                                     <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">Akun <i class="fa fa-angle-down mt-1"></i></a>
                                     <div class="dropdown-menu bg-primary rounded-0 border-0 m-0">
                                         <a href="/customer/account/{{auth()->guard('customer')->user()->id}}" class="dropdown-item">Akun Saya</a>
+                                        <a href="/customer/account/change-password/{{auth()->guard('customer')->user()->id}}" class="dropdown-item">Ganti Password</a>
                                         <a href="/customer/transaction/history" class="dropdown-item">Riwayat Transaksi</a>
                                         <a href="/customer/logout" class="dropdown-item">Keluar</a>
                                     </div>
@@ -144,10 +146,15 @@
     @yield('detailProductPage')
     @yield('productPage')
     @yield('listProductByCategory')
+
     @yield('loginFrontPage')
+    @yield('forgotPasswordFrontPage')
     @yield('registerFrontPage')
+    @yield('resetPasswordFrontPage')
+
     @yield('cartPage')
     @yield('customerAccount')
+    @yield('customerChangePasswordAccount')
     @yield('checkoutAddressPage')
     @yield('trasactionPage')
     @yield('historyTrasactionPage')
@@ -156,7 +163,7 @@
     <div class="container-fluid bg-dark text-secondary mt-5 pt-5">
         <div class="row px-xl-5 pt-5">
             <div class="col-lg-4 col-md-12 mb-5 pr-3 pr-xl-5">
-                <h5 class="text-secondary text-uppercase mb-4">Hubungi Kami</h5>
+                <h5 class="text-secondary text-uppercase mb-4">Kontak Kami</h5>
                 {{-- <p class="mb-4">Kontak Layanan Pelanggan</p> --}}
                 <p class="mb-2"><i class="fa fa-map-marker-alt text-primary mr-3"></i>123 Street, New York, USA</p>
                 <p class="mb-2"><i class="fa fa-envelope text-primary mr-3"></i>info@example.com</p>
@@ -173,10 +180,16 @@
                         </div>
                     </div>
                     <div class="col-md-4 mb-5">
-                        <h5 class="text-secondary text-uppercase mb-4">Akun Saya</h5>
+                        <h5 class="text-secondary text-uppercase mb-4">Akun</h5>
                         <div class="d-flex flex-column justify-content-start">
-                            <a class="text-secondary mb-2" href="#"><i class="fa fa-angle-right mr-2"></i>Login</a>
-                            <a class="text-secondary mb-2" href="#"><i class="fa fa-angle-right mr-2"></i>Daftar</a>
+                            @if (!auth()->guard('customer')->user())
+                                <a class="text-secondary mb-2" href="/customer/login"><i class="fa fa-angle-right mr-2"></i>Login</a>
+                                <a class="text-secondary mb-2" href="/customer/register"><i class="fa fa-angle-right mr-2"></i>Daftar</a>
+                            @else
+                                <a class="text-secondary mb-2" href="#"><i class="fa fa-angle-right mr-2"></i>Akun Saya</a>
+                                <a class="text-secondary mb-2" href="#"><i class="fa fa-angle-right mr-2"></i>Ganti Password</a>
+                                <a class="text-secondary mb-2" href="#"><i class="fa fa-angle-right mr-2"></i>Riwayat Transaksi</a>
+                            @endif
                         </div>
                     </div>
                     <div class="col-md-4 mb-5">
@@ -189,7 +202,7 @@
                                 </div>
                             </div>
                         </form>
-                        <h6 class="text-secondary text-uppercase mt-4 mb-3">Follow Us</h6>
+                        <h6 class="text-secondary text-uppercase mt-4 mb-3">Ikuti Kami</h6>
                         <div class="d-flex">
                             <a class="btn btn-primary btn-square mr-2" href="#"><i class="fab fa-twitter"></i></a>
                             <a class="btn btn-primary btn-square mr-2" href="#"><i class="fab fa-facebook-f"></i></a>
@@ -203,11 +216,8 @@
         <div class="row border-top mx-xl-5 py-4" style="border-color: rgba(256, 256, 256, .1) !important;">
             <div class="col-md-6 px-xl-0">
                 <p class="mb-md-0 text-center text-md-left text-secondary">
-                    &copy; <a class="text-primary" href="#">Domain</a>. 2023 All Rights Reserved.
+                    &copy; <a class="text-primary" href="#">Minsu</a>.ID 2023 All Rights Reserved.
                 </p>
-            </div>
-            <div class="col-md-6 px-xl-0 text-center text-md-right">
-                <img class="img-fluid" src="/frontUi/img/payments.png" alt="">
             </div>
         </div>
     </div>
@@ -230,5 +240,8 @@
 
     <!-- Template Javascript -->
     <script src="/frontUi/js/main.js"></script>
+
+	<!-- Flash Message -->
+	<script type="text/javascript">window.setTimeout("document.getElementById('flashMessage').style.display='none';", 5000); </script>
 </body>
 </html>

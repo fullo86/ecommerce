@@ -12,6 +12,7 @@ use Illuminate\Http\Request;
 use Gloudemans\Shoppingcart\Facades\Cart;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Session;
 
 class SnapController extends Controller
 {
@@ -44,6 +45,8 @@ class SnapController extends Controller
             ],
         ]);
 
+        Session::flash('status', 'success');
+        Session::flash('message', 'Produk Berhasil Di-Tambahkan ke Keranjang');
         return redirect('/customer/cart');
     }    
 
@@ -55,9 +58,10 @@ class SnapController extends Controller
             $rowId = $item->rowId;    
             $qty = $request->input('qty');
             $priceProduct = $request->input('price');
-    
             $dataUpdate = Cart::update($rowId, $qty, $priceProduct);
-    
+
+            Session::flash('status', 'success');
+            Session::flash('message', 'Produk Berhasil Diupdate');        
             return response()->json(['success' => true, 'data' => $dataUpdate]);
         } else {
             return response()->json(['success' => false, 'message' => 'Item not found in the cart.']);
@@ -67,8 +71,15 @@ class SnapController extends Controller
 
     public function removeCart($id)
     {
-        Cart::remove($id);
+        $removeCart = Cart::remove($id);
 
+        if (!$removeCart) {
+            Session::flash('status', 'failed');
+            Session::flash('message', 'Produk Gagal Dihapus Dari Keranjang');
+        }
+
+        Session::flash('status', 'success');
+        Session::flash('message', 'Produk Berhasil Dihapus Dari Keranjang');
         return redirect('/customer/cart');
     }
 
@@ -113,7 +124,6 @@ class SnapController extends Controller
         $productWeight = Cart::content();
         $totalWeight = 0;
         $filteredData = [];
-
         foreach ($productWeight as $item) {
             $totalWeight += $item->options->weight * $item->qty;
         }
@@ -131,12 +141,14 @@ class SnapController extends Controller
                 $filteredData[] = $item;
             }
         }
-
         $id = Str::uuid();
         $data = $request->all();
         $data['id'] = $id->toString();
         $data['order_id'] = rand();
         $newTrx = Transaction::create($data);
+        foreach ($productWeight as $value) {
+            $newTrx->products()->attach($value->id, ['qty' => $value->qty, 'size' => $value->options->size['name'], 'ship_cost' => $filteredData[0]['cost'][0]['value']]);
+        }
         $newTrx->products()->sync($data['products']);
         return redirect('/customer/transaction')->with(['dataShipping' => $filteredData, 'listCategories' => $categories]);
     }
@@ -211,13 +223,12 @@ class SnapController extends Controller
                     'status_code' => $request->status_code, 
                     'payment_type' => $request->payment_type, 
                     'transaction_time' => $request->transaction_time, 
-                    'bank' => $request->va_numbers[0]['bank'], 
+                    'bank' => $request->payment_type == 'echannel' ? 'mandiri' : ($request->va_numbers[0]['bank'] ?? null),
                     'va_number' => isset($request->va_numbers) ? $request->va_numbers[0]['va_number'] : (isset($request->permata_va_number) ? $request->permata_va_number : $request->bill_key),
                 ]);
             }
         }
     }
-
     public function history()
     {
         $customer = auth()->guard('customer')->user();
@@ -226,6 +237,12 @@ class SnapController extends Controller
         return view('frontpage/v_snap/logTransaction', ['history' => $trxHistory, 'listCategories' => $categories,]);
     }
 
+    public function clearCart()
+    {
+        Cart::destroy();
+    
+        return response()->json(['message' => 'Cart cleared successfully']);
+    }    
 }
 
 

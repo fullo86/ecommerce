@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\administrator;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\UserRequest;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Support\Str;
@@ -23,8 +24,13 @@ class StaffController extends Controller
         return view('adminarea/v_staff/addStaff');
     }
 
-    public function store(Request $request)
+    public function store(UserRequest $request)
     {
+        $request->validate([
+            'username' => 'unique:users',
+            'password' => 'required|min:8',
+        ]);
+
         //random uuid
         $id = Str::uuid();
         $request['id'] = $id->toString();
@@ -50,7 +56,7 @@ class StaffController extends Controller
         return view('adminarea/v_staff/editStaff', ['staffValue' => $staffValue]);
     }
 
-    public function update(Request $request, $id)
+    public function update(UserRequest $request, $id)
     {
         $updateStaff = User::findOrFail($id);
         $data = $request->all();
@@ -78,7 +84,7 @@ class StaffController extends Controller
         return redirect('/admin-area/staff');
     }
 
-    public function updateStaff(Request $request, $id)
+    public function updateStaff(UserRequest $request, $id)
     {
         $updateStaff = User::findOrFail($id);
         $data = $request->all();
@@ -114,20 +120,32 @@ class StaffController extends Controller
 
     public function updatePassword(Request $request, $id)
     {
+        $request->validate([
+            'password' => 'required|min:8',
+        ]);
+
         $data = User::findOrFail($id);
-    
+
         if ($data) {
-            $data->password = Hash::make($request->password);
-            $data->save();
-    
+            if (!Hash::check($request->old_password, auth()->user()->password)) {
+                Session::flash('status', 'failed');
+                Session::flash('message', 'Password Lama Salah');
+                return redirect('/admin-area/staff/change-password/'.$data->id);
+            }
+
+            if ($request->new_password != $request->repeat_password) {
+                Session::flash('status', 'failed');
+                Session::flash('message', 'Konfirmasi Password Tidak Sama');
+                return redirect('/admin-area/staff/change-password/'.$data->id);
+            }
+
+            auth()->user()->update([
+                'password' => Hash::make($request->new_password)
+            ]);
             Session::flash('status', 'success');
             Session::flash('message', 'Password Berhasil Diubah');
             return redirect('/admin-area/staff/change-password/' . $data->id);
         }
-    
-        Session::flash('status', 'failed');
-        Session::flash('message', 'Password Gagal Diubah');
-        return redirect('/admin-area/staff/change-password/'.$data->id);
     }
     
     public function approve($id)

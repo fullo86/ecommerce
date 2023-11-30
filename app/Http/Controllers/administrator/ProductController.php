@@ -223,23 +223,23 @@ class ProductController extends Controller
     {
         $removeProduct = Product::findOrFail($id);
 
-        if ($removeProduct->image_product1) {
-            if ($removeProduct->image_product1 != 'default_product.jpg' && file_exists(public_path('storage/images/product/' . $removeProduct->image_product1))) {
-                unlink(public_path('storage/images/product/' . $removeProduct->image_product1));
-            }
-        }
+        // if ($removeProduct->image_product1) {
+        //     if ($removeProduct->image_product1 != 'default_product.jpg' && file_exists(public_path('storage/images/product/' . $removeProduct->image_product1))) {
+        //         unlink(public_path('storage/images/product/' . $removeProduct->image_product1));
+        //     }
+        // }
 
-        if ($removeProduct->image_product2) {
-            if ($removeProduct->image_product2 != 'default_product.jpg' && file_exists(public_path('storage/images/product/' . $removeProduct->image_product2))) {
-                unlink(public_path('storage/images/product/' . $removeProduct->image_product2));
-            }
-        }
+        // if ($removeProduct->image_product2) {
+        //     if ($removeProduct->image_product2 != 'default_product.jpg' && file_exists(public_path('storage/images/product/' . $removeProduct->image_product2))) {
+        //         unlink(public_path('storage/images/product/' . $removeProduct->image_product2));
+        //     }
+        // }
 
-        if ($removeProduct->image_product3) {
-            if ($removeProduct->image_product3 != 'default_product.jpg' && file_exists(public_path('storage/images/product/' . $removeProduct->image_product3))) {
-                unlink(public_path('storage/images/product/' . $removeProduct->image_product3));
-            }
-        }
+        // if ($removeProduct->image_product3) {
+        //     if ($removeProduct->image_product3 != 'default_product.jpg' && file_exists(public_path('storage/images/product/' . $removeProduct->image_product3))) {
+        //         unlink(public_path('storage/images/product/' . $removeProduct->image_product3));
+        //     }
+        // }
 
         if (!$removeProduct) {
             Session::flash('status', 'failed');
@@ -250,7 +250,6 @@ class ProductController extends Controller
         Session::flash('status', 'success');
         Session::flash('message', 'Berhasil Menghapus Data Produk');
         return redirect('/admin-area/products');
-
     }
 
     public function showDeleted()

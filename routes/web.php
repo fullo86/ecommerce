@@ -3,7 +3,6 @@
 use App\Http\Controllers\administrator\CategoryController;
 use App\Http\Controllers\administrator\CustomerController;
 use App\Http\Controllers\administrator\DashboardAdminController;
-use App\Http\Controllers\administrator\PriceController;
 use App\Http\Controllers\administrator\ProductController;
 use App\Http\Controllers\administrator\StaffController;
 use App\Http\Controllers\administrator\StockController;
@@ -13,7 +12,6 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\SnapController;
 use App\Http\Controllers\UserCustomerController;
 use App\Models\Product;
-use Illuminate\Foundation\Auth\EmailVerificationRequest;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -31,13 +29,13 @@ use Illuminate\Support\Facades\Route;
 //     return view('welcome');
 // });
 
-Route::get('/auth/admin', [AuthController::class, 'viewLoginAdminArea'])->name('login');
-Route::post('/auth/admin', [AuthController::class, 'authenticateAdmin']);
+Route::middleware('not_login_user')->group(function() {
+    Route::get('/auth/admin', [AuthController::class, 'viewLoginAdminArea'])->name('login');
+    Route::post('/auth/admin', [AuthController::class, 'authenticateAdmin']);    
+});
 
 Route::middleware('auth')->group(function() {
     Route::get('/administrator/logout', [AuthController::class, 'logout']);
-
-
 
     Route::middleware('admin-or-staff')->group(function() {
         Route::get('/administrator/dashboard', [DashboardAdminController::class, 'index']);
@@ -75,6 +73,7 @@ Route::middleware('auth')->group(function() {
         Route::get('/admin-area/transaction', [TransactionController::class, 'index']);
         Route::get('/admin-area/transaction/{id}', [TransactionController::class, 'detailTrx']);
         Route::get('/admin-area/transaction/invoice/{id}', [TransactionController::class, 'invoice']);
+        Route::delete('/admin-area/delete/transaction/{id}', [TransactionController::class, 'destroy']);
     });
 
     Route::middleware('auth-admin')->group(function() {
@@ -94,34 +93,46 @@ Route::middleware('auth')->group(function() {
         Route::patch('/admin-area/staff/change/password/update/{id}', [StaffController::class, 'updatePassword']);
         Route::patch('/admin-area/change-status/staff/{id}', [StaffController::class, 'approve']);
         Route::delete('/admin-area/delete/staff/{id}', [StaffController::class, 'destroy']);
+
+        Route::get('/admin-area/delete/transaction/show', [TransactionController::class, 'showDeleted']);
+        Route::get('/admin-area/restore/transaction/{id}', [TransactionController::class, 'restore']);
     });
 
 });
 
-Route::get('/customer/login', [AuthController::class, 'viewLoginCustomerArea'])->name('loginCustomer');
-Route::post('/customer/login/auth', [AuthController::class, 'authenticateCustomer']);
-Route::get('/customer/register', [AuthController::class, 'register']);
-Route::post('/customer/register/save', [AuthController::class, 'registUser']);
-Route::get('/customer/logout', [AuthController::class, 'logoutCustomer']);
+// Route::middleware('not_login_customer')->group(function() {
+    Route::get('/customer/login', [AuthController::class, 'viewLoginCustomerArea'])->name('loginCustomer');
+    Route::post('/customer/login/auth', [AuthController::class, 'authenticateCustomer'])->middleware('throttle:loginCustomer');
+    Route::get('/customer/register', [AuthController::class, 'register']);
+    Route::post('/customer/register/save', [AuthController::class, 'registUser']);    
+    Route::get('/customer/logout', [AuthController::class, 'logoutCustomer']);
+    Route::get('/customer/forgot-password', [AuthController::class, 'forgotPassword'])->name('password.request');
+    Route::post('/customer/forgot-password', [AuthController::class, 'processForgotPassword'])->name('password.email');
+    Route::get('/customer/reset-password/{token}', [AuthController::class, 'resetPassword'])->name('password.reset');
+    Route::post('/reset-password', [AuthController::class, 'processResetPassword'])->name('password.update');
+    // });
 
-Route::get('/', [DashboardController::class, 'index']);
-Route::get('/product/detail/{id}', [DashboardController::class, 'show']);
-Route::get('/products', [DashboardController::class, 'listProducts'])->name('productsList');;
-Route::get('/products/search', [DashboardController::class, 'productSearch']);
-// Route::get('/category/products-list', [DashboardController::class, 'listProductByCategory'])->name('products.listByCategory');
-
-Route::get('/account/verification/', [AuthController::class, 'verify']);
-Route::get('/account/verify/{id}', [AuthController::class, 'verified']);
-
-Route::get('/customer/account/{id}', [UserCustomerController::class, 'account']);
-Route::put('/customer/account/update/{id}', [UserCustomerController::class, 'customerUpdate']);
+    Route::get('/', [DashboardController::class, 'index']);
+    Route::get('/product/detail/{id}', [DashboardController::class, 'show']);
+    Route::get('/products', [DashboardController::class, 'listProducts'])->name('productsList');;
+    Route::get('/products/search', [DashboardController::class, 'productSearch']);
+    // Route::get('/category/products-list', [DashboardController::class, 'listProductByCategory'])->name('products.listByCategory');
 
 
-Route::get('/customer/cart', [SnapController::class, 'cart']);
-Route::post('/customer/cart/{id}', [SnapController::class, 'addToCart']);
-Route::patch('/customer/cart/update/{id}', [SnapController::class, 'updateCart']);
-Route::delete('/customer/cart/remove/{id}', [SnapController::class, 'removeCart']);
-Route::get('/customer/checkout', [SnapController::class, 'checkout']);
-Route::post('/customer/checkout', [SnapController::class, 'transaction']);
-Route::get('/customer/transaction', [SnapController::class, 'confirmTrx']);
-Route::get('/customer/transaction/history', [SnapController::class, 'history']);
+    Route::get('/account/verification/', [AuthController::class, 'verify']);
+    Route::get('/account/verify/{id}', [AuthController::class, 'verified']);
+    
+    Route::get('/customer/account/{id}', [UserCustomerController::class, 'account']);
+    Route::put('/customer/account/update/{id}', [UserCustomerController::class, 'customerUpdate']);
+    Route::get('/customer/account/change-password/{id}', [UserCustomerController::class, 'changePassword']);
+    Route::patch('/customer/account/change-password/update/{id}', [UserCustomerController::class, 'updatePassword']);
+    
+    Route::get('/customer/cart', [SnapController::class, 'cart']);
+    Route::post('/customer/cart/{id}', [SnapController::class, 'addToCart']);
+    Route::patch('/customer/cart/update/{id}', [SnapController::class, 'updateCart']);
+    Route::delete('/customer/cart/remove/{id}', [SnapController::class, 'removeCart']);
+    Route::post('/customer/cart/clear', [SnapController::class, 'clearCart']);
+    Route::get('/customer/checkout', [SnapController::class, 'checkout']);
+    Route::post('/customer/checkout', [SnapController::class, 'transaction']);
+    Route::get('/customer/transaction', [SnapController::class, 'confirmTrx']);
+    Route::get('/customer/transaction/history', [SnapController::class, 'history']);

@@ -6,6 +6,15 @@
     <header class="page-header">
         <h2>Edit Kategori</h2>
     </header>
+    @if ($errors->any())
+        <div class="alert alert-danger">
+            <ul>
+                @foreach ($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+        </div>
+    @endif
     <div class="panel-body">
         <h4 class="mb-2">Edit Kategori</h4>
         <form class="form-horizontal form-bordered" action="/admin-area/edit/category/update/{{ $category->id }}" method="post">

@@ -6,9 +6,17 @@
     <header class="page-header">
         <h2>Tambah Kategori</h2>
     </header>
-
+    @if ($errors->any())
+        <div class="alert alert-danger">
+            <ul>
+                @foreach ($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+        </div>
+    @endif
     <div class="panel-body">
-        <h4 class="mb-2">Tambah Kategori</h4>
+      <h4 class="mb-2">Tambah Kategori</h4>
         <form class="form-horizontal form-bordered" action="/admin-area/create/category/save" method="post">
             @csrf
             <div class="form-group">
